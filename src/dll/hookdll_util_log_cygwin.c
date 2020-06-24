@@ -1,5 +1,5 @@
-// SPDX-License-Identifier: GPL-2.0-or-later
-/* version.h
+﻿// SPDX-License-Identifier: GPL-2.0-or-later
+/* hookdll_util_log_cygwin.c
  * Copyright (C) 2020 Feng Shun.
  *
  *   This program is free software: you can redistribute it and/or modify
@@ -16,12 +16,16 @@
  *   version 2 along with this program. If not, see
  *   <http://www.gnu.org/licenses/>.
  */
-#ifndef PXCH_VERSION_MAJOR
-#define PXCH_VERSION_MAJOR 0
-#endif
-#ifndef PXCH_VERSION_MINOR
-#define PXCH_VERSION_MINOR 6
-#endif
-#ifndef PXCH_VERSION_PATCH
-#define PXCH_VERSION_PATCH 8
-#endif
+#include "includes_generic.h"
+#include "defines_generic.h"
+#include <unistd.h>
+
+#include "log_generic.h"
+#include "tls_generic.h"
+#include "hookdll_generic.h"
+#include "hookdll_util_generic.h"
+
+void pxch_cygwin_write(int fd, const void *buf, size_t nbyte)
+{
+	write(fd, buf, nbyte);
+}

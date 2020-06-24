@@ -25,6 +25,8 @@ x64 SP1, Windows XP x86 SP3 and Cygwin 64-bit 3.1.2. Target OS should
 have [Visual C++ Redistributable for Visual Studio 2015](https://www.microsoft.com/en-us/download/details.aspx?id=48145) 
 installed.
 
+**WARNING: ANONYMITY IS NOT GUARANTEED!**
+
 WARNING: this program works only on dynamically linked programs. Also 
 both proxychains.exe and the program to call must be the same platform 
 and architecture (use proxychains_x86.exe to call x86 program, 
@@ -131,21 +133,37 @@ SIGINT (Ctrl-C).
 Switching the DLL injection technique from `CreateRemoteThread()` to 
 modifying the target process' entry point, proxychains.exe now supports 
 proxifying Cygwin/Msys2 process perfectly. (Even when you call them 
-with Win32 version of proxychains.exe). See [DevNotes](DEVNOTES.md).
+with Win32 version of proxychains.exe). See [DevNotes](doc/DEVNOTES.md).
 
 If you want to proxify [MinGit busybox variant](https://github.com/git-for-windows/git/releases/),
 replace its `busybox.exe` with
 [this version modified by me](https://github.com/shunf4/busybox-w32).
-See [DevNotes](DEVNOTES.md).
+See [DevNotes](doc/DEVNOTES.md).
 
 # To-do and Known Issues
 
-- [ ] Add an option to totally prevent "DNS leak" ? (Do name lookup on
-SOCKS5 server only)
+## ConEmu Compatibility
+
+[ConEmu](https://github.com/Maximus5/ConEmu)
+[prevents](https://github.com/Maximus5/ConEmu/blob/9629fa82c8a4c817f3b6faa2161a0a9eec9285c4/src/ConEmuHk/hkProcess.cpp#L497)
+its descendant processes to do `SetThreadContext()`. This means
+proxychains.exe is in no way compatible with terminals based on ConEmu
+(like cmder).
+
+## To-do
+
 - [ ] Properly handle "fork-and-exit" child process ? (In this case the
 descendant processes' dns queries would never succeed)
 - [ ] Remote DNS resolving based on UDP associate
 - [ ] Hook `sendto()`, coping with applications which do TCP fast open
+- [X] IPs resolved from hosts file should also be filtered like fake ip
+(fixed in 0.6.8)
+- [X] Resolve encoding issue regarding Cygwin and Mintty (fixed in 0.6.7)
+- [X] Fake IPs should be filtered according to types of resolved IPs
+and hints in `GetAddrInfoW` and `gethostbyname`, otherwise crash may happen
+(fixed in 0.6.7)
+- [X] Add an option to totally prevent "DNS leak" ? (Do name lookup on
+SOCKS5 server only) (fixed in 0.6.6)
 - [x] Connection closure should be correctly handled in
       `Ws2_32_LoopRecv` and `Ws2_32_LoopSend` (fixed in 0.6.5)
 - [x] A large part of socks5 server name possibly lost when parsing
